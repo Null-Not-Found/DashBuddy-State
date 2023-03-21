@@ -1,0 +1,14 @@
+# Node.js build artifacts
+node_modules/
+build/
+
+# TypeScript build artifacts
+*.tsbuildinfo
+*.ts~
+
+# Environment variables
+.env
+
+# Logs
+*.log
+logs/
