@@ -8,23 +8,33 @@ const PORT: Number = 3500;
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 
-// Handling post / Request
-app.post('/repeat', (req: Request, res: Response) => {
+app.post('/', (req: Request, res: Response) => {
+
+	var body: JSON = req.body;
+
 	res.status(200).json({
-		"Time": new Date().toUTCString(),
-		//get specific prop
-		"abc": req.body["text"],
-		//get whole body (obvious)
-		"body": req.body
+		"Time": new Date().toUTCString()
 	});
 })
 
-// /:id to set the path and <{ id: Number }> to set id as a actual parameter
-app.get('/repeat/:id', (req: Request<{ id: Number }>, res: Response) => {
+app.get('/:UId', (req: Request<{ UId: Number }>, res: Response) => {
+
+	var responseObject: JSON = <JSON><unknown>{
+		"test": req.params.UId
+	};
+
 	res.status(200).json({
 		"Time": new Date().toUTCString(),
-		//read param
-		"Id": req.params.id
+		"data": responseObject
+	});
+})
+
+app.put('/', (req: Request, res: Response) => {
+
+	var body: JSON = req.body;
+
+	res.status(200).json({
+		"Time": new Date().toUTCString()
 	});
 })
 
