@@ -9,6 +9,9 @@ build/
 # Environment variables
 .env
 
+# visual studio
+.vs
+
 # Logs
 *.log
 logs/
