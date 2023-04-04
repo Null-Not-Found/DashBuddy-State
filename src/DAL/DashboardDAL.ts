@@ -1,17 +1,45 @@
 import { PrismaClient, Dashboard } from '@prisma/client'
+import { JsonObjectExpression } from 'typescript';
+import { IDashboardDAL } from '../DAL interfaces/IDashBoardDAL';
 
-const PRISMA = new PrismaClient();
+export class DashboardDAL implements IDashboardDAL{
+    private static PRISMA = new PrismaClient();
 
-export async function GetAllDashboards() {
-    const DASHBOARDS: Dashboard[] = await PRISMA.dashboard.findMany();
-    console.log(DASHBOARDS);
-    return DASHBOARDS;
+    public async GetAllDashboards(): Promise<Dashboard[]>  {
+        
+        var dashboards: Dashboard[] = [];
+        
+        try {
+            dashboards = await DashboardDAL.PRISMA.dashboard.findMany();
+        }
+        catch (e) {
+            console.error(e);
+        }
+        finally {
+            await DashboardDAL.PRISMA.$disconnect();
+        }
+
+        return dashboards;
+    };
+    
+    public async CreateDashboard(_config: string): Promise<void> {
+        
+        
+        try {
+            await DashboardDAL.PRISMA.dashboard.create({
+                data: {
+                    config: _config
+                }
+            })
+            console.log(_config);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        finally {
+            await DashboardDAL.PRISMA.$disconnect();
+        }
+    };
+    
+    
 }
-
-GetAllDashboards()
-    .catch(e => {
-        console.error(e)
-    })
-    .finally(async () => {
-        await PRISMA.$disconnect()
-    })

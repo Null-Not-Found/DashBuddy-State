@@ -1,24 +1,33 @@
 // Importing module
 import { Dashboard } from '@prisma/client';
 import express, { Application, Request, Response } from 'express';
-import { GetAllDashboards } from './DAL/DashboardDAL';
+import { IDashboardDAL } from './DAL interfaces/IDashBoardDAL';
+import { DashboardDAL } from './DAL/DashboardDAL';
 
-const bp = require('body-parser');
-const app: Application = express();
+const PARSER = require('body-parser');
+const APP: Application = express();
 const PORT: Number = 3500;
+const DAL: IDashboardDAL = new DashboardDAL();
 
-app.use(bp.json());
-app.use(bp.urlencoded({ extended: true }));
+APP.use(PARSER.json());
+APP.use(PARSER.urlencoded({ extended: true }));
 
-app.post('/', (_req: Request, _res: Response) => {
+APP.post('/', async (_req: Request, _res: Response) => {
+	const RESULT: Dashboard[] = await DAL.CreateDashboard(_req.body);
+	
+	if (RESULT) {
+		RESULT
+	}
+
 	_res.status(200).json({
-		"Time": new Date().toUTCString()
+		"Time": new Date().toUTCString(),
+		"Given data": _req.body
 	});
 })
 
-app.get('/', async (_req: Request, _res: Response) => {
+APP.get('/', async (_req: Request, _res: Response) => {
 
-	const DASHBOARDS: Dashboard[] = await GetAllDashboards(); 
+	const DASHBOARDS: Dashboard[] = await DAL.GetAllDashboards(); 
 
 	_res.status(200).json({
 		"Time": new Date().toUTCString(),
@@ -26,7 +35,7 @@ app.get('/', async (_req: Request, _res: Response) => {
 	});
 })
 
-app.get('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
+APP.get('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
 
 	var responseObject: JSON = <JSON><unknown>{
 		"UId": _req.params.UId
@@ -38,7 +47,7 @@ app.get('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
 	});
 })
 
-app.put('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
+APP.put('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
 
 	var responseObject: JSON = <JSON><unknown>{
 		"UId": _req.params.UId
@@ -51,7 +60,7 @@ app.put('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
 })
 
 // Server setup
-app.listen(PORT, () => {
+APP.listen(PORT, () => {
 	console.log('The application is listening '
 		+ 'on port http://localhost:' + PORT);
 })
