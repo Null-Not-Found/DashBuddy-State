@@ -1,5 +1,4 @@
 // Importing module
-import { Dashboard } from '@prisma/client';
 import express, { Application, Request, Response } from 'express';
 import { IDashboardDAL } from './DAL interfaces/IDashBoardDAL';
 import { DashboardDAL } from './DAL/DashboardDAL';
@@ -13,7 +12,7 @@ APP.use(PARSER.json());
 APP.use(PARSER.urlencoded({ extended: true }));
 
 APP.post('/', async (_req: Request, _res: Response) => {
-	const RESULT: Dashboard[] = await DAL.CreateDashboard(_req.body);
+	const RESULT = await DAL.CreateDashboard(_req.body);
 	
 	if (RESULT) {
 		RESULT
@@ -27,7 +26,7 @@ APP.post('/', async (_req: Request, _res: Response) => {
 
 APP.get('/', async (_req: Request, _res: Response) => {
 
-	const DASHBOARDS: Dashboard[] = await DAL.GetAllDashboards(); 
+	const DASHBOARDS: [] = await DAL.GetAllDashboards(); 
 
 	_res.status(200).json({
 		"Time": new Date().toUTCString(),

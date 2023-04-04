@@ -1,7 +1,7 @@
-import { Dashboard } from "@prisma/client";
+import mongoose from "mongoose";
 
 export interface IDashboardDAL
 {
-    GetAllDashboards(): Promise<Dashboard[]>;
-    CreateDashboard(_config: string): Promise<void>;
+    GetAllDashboards(): Promise<[]>;
+    CreateDashboard(_config: JSON): Promise<mongoose.Schema>;
 }
