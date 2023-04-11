@@ -12,11 +12,33 @@ APP.use(PARSER.json());
 APP.use(PARSER.urlencoded({ extended: true }));
 
 APP.post('/post', async (_req: Request, _res: Response) => {
-	const DASHBOARD = await DAL.CreateDashboard(_req.body);
+	const DASHBOARDID = await DAL.CreateDashboard();
+
+	if (DASHBOARDID == null)
+	{
+		_res.status(400).json({
+			"Time": new Date().toUTCString(),
+			"Error": "Dashboard could not be created"
+		});
+
+		return;
+	}
 
 	_res.status(200).json({
 		"Time": new Date().toUTCString(),
-		"Dashboard": DASHBOARD
+		"Id": DASHBOARDID
+	});
+})
+
+APP.put('/put/:DId', (_req: Request<{ UId: Number }>, _res: Response) => {
+
+	var responseObject: JSON = <JSON><unknown>{
+		"DId": _req.params.UId
+	};
+
+	_res.status(200).json({
+		"Time": new Date().toUTCString(),
+		"data": responseObject
 	});
 })
 
@@ -30,22 +52,10 @@ APP.get('/get', async (_req: Request, _res: Response) => {
 	});
 })
 
-APP.get('/get/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
+APP.get('/get/:DId', (_req: Request<{ UId: Number }>, _res: Response) => {
 
 	var responseObject: JSON = <JSON><unknown>{
-		"UId": _req.params.UId
-	};
-
-	_res.status(200).json({
-		"Time": new Date().toUTCString(),
-		"data": responseObject
-	});
-})
-
-APP.put('/put/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
-
-	var responseObject: JSON = <JSON><unknown>{
-		"UId": _req.params.UId
+		"DId": _req.params.UId
 	};
 
 	_res.status(200).json({

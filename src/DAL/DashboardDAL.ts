@@ -1,6 +1,5 @@
-import { JsonObjectExpression } from 'typescript';
 import { IDashboardDAL } from '../DAL interfaces/IDashBoardDAL';
-import mongoose, { Model } from 'mongoose';
+import mongoose from 'mongoose';
 import Dashboard from '../models/Dashboard';
 import { IDashboard } from '../Model interfaces/IDashboard';
 
@@ -24,29 +23,22 @@ export class DashboardDAL implements IDashboardDAL{
         return dashboards;
     };
     
-    public async CreateDashboard(_config: JSON): Promise<IDashboard> {
-        let dashboard: IDashboard = {_id: new mongoose.Types.ObjectId() , config: {}};
+    public async CreateDashboard(): Promise<mongoose.Types.ObjectId | null> {
+        let dashboardId: mongoose.Types.ObjectId | null = null;
         
         try {
             await mongoose.connect("mongodb://localhost:4000/DashBuddy-State");
             
-            dashboard = await Dashboard.create({_id: new mongoose.Types.ObjectId(), config: _config});
+            let dashboard = await Dashboard.create({_id: new mongoose.Types.ObjectId()});
+            dashboardId = dashboard._id;
 
-            let newdashboard = await Dashboard.findById(dashboard._id, '-__v');
-            if (newdashboard != null)
-            {
-                dashboard = newdashboard
-            }
-
-            console.log(_config);
         }
         catch (e) {
             console.error(e);
         }
         finally {
             await mongoose.disconnect();
-            return dashboard;
+            return dashboardId;
         }
     };
-    
 }
