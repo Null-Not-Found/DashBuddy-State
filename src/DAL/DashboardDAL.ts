@@ -2,17 +2,13 @@ import { JsonObjectExpression } from 'typescript';
 import { IDashboardDAL } from '../DAL interfaces/IDashBoardDAL';
 import mongoose, { Model } from 'mongoose';
 import Dashboard from '../models/Dashboard';
+import { IDashboard } from '../Model interfaces/IDashboard';
 
 export class DashboardDAL implements IDashboardDAL{
 
-    constructor() {      
-        // const dotenv = require('dotenv');
-        // dotenv.config();
-    }
-    
-    public async GetAllDashboards(): Promise<typeof Dashboard[]> {
+    public async GetAllDashboards(): Promise<IDashboard[]> {
         
-        let dashboards: typeof Dashboard[] = [];
+        let dashboards: IDashboard[] = [];
 
         try {
             await mongoose.connect("mongodb://localhost:4000/DashBuddy-State");
@@ -28,15 +24,20 @@ export class DashboardDAL implements IDashboardDAL{
         return dashboards;
     };
     
-    public async CreateDashboard(_config: JSON): Promise<any> {
-        
-        let dashboard;
+    public async CreateDashboard(_config: JSON): Promise<IDashboard> {
+        let dashboard: IDashboard = {_id: new mongoose.Types.ObjectId() , config: {}};
         
         try {
             await mongoose.connect("mongodb://localhost:4000/DashBuddy-State");
             
-            dashboard = await Dashboard.create({config: _config});
-            
+            dashboard = await Dashboard.create({_id: new mongoose.Types.ObjectId(), config: _config});
+
+            let newdashboard = await Dashboard.findById(dashboard._id, '-__v');
+            if (newdashboard != null)
+            {
+                dashboard = newdashboard
+            }
+
             console.log(_config);
         }
         catch (e) {
@@ -47,6 +48,5 @@ export class DashboardDAL implements IDashboardDAL{
             return dashboard;
         }
     };
-    
     
 }

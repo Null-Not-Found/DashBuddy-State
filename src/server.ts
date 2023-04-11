@@ -11,20 +11,16 @@ const DAL: IDashboardDAL = new DashboardDAL();
 APP.use(PARSER.json());
 APP.use(PARSER.urlencoded({ extended: true }));
 
-APP.post('/', async (_req: Request, _res: Response) => {
-	const RESULT = await DAL.CreateDashboard(_req.body);
-	
-	if (RESULT) {
-		RESULT
-	}
+APP.post('/post', async (_req: Request, _res: Response) => {
+	const DASHBOARD = await DAL.CreateDashboard(_req.body);
 
 	_res.status(200).json({
 		"Time": new Date().toUTCString(),
-		"Given data": _req.body
+		"Dashboard": DASHBOARD
 	});
 })
 
-APP.get('/', async (_req: Request, _res: Response) => {
+APP.get('/get', async (_req: Request, _res: Response) => {
 
 	const DASHBOARDS = await DAL.GetAllDashboards(); 
 
@@ -34,7 +30,7 @@ APP.get('/', async (_req: Request, _res: Response) => {
 	});
 })
 
-APP.get('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
+APP.get('/get/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
 
 	var responseObject: JSON = <JSON><unknown>{
 		"UId": _req.params.UId
@@ -46,7 +42,7 @@ APP.get('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
 	});
 })
 
-APP.put('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
+APP.put('/put/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
 
 	var responseObject: JSON = <JSON><unknown>{
 		"UId": _req.params.UId
@@ -55,6 +51,13 @@ APP.put('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
 	_res.status(200).json({
 		"Time": new Date().toUTCString(),
 		"data": responseObject
+	});
+})
+
+APP.get('/ping', (_req: Request, _res: Response) => {
+
+	_res.status(200).json({
+		"status": "Pong!"
 	});
 })
 
