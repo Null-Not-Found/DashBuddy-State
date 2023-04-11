@@ -26,11 +26,11 @@ APP.post('/', async (_req: Request, _res: Response) => {
 
 APP.get('/', async (_req: Request, _res: Response) => {
 
-	const DASHBOARDS: [] = await DAL.GetAllDashboards(); 
+	const DASHBOARDS = await DAL.GetAllDashboards(); 
 
 	_res.status(200).json({
 		"Time": new Date().toUTCString(),
-		"data": DASHBOARDS
+		"Dashboards": DASHBOARDS
 	});
 })
 

@@ -10,13 +10,13 @@ export class DashboardDAL implements IDashboardDAL{
         // dotenv.config();
     }
     
-    public async GetAllDashboards(): Promise<[]> {
+    public async GetAllDashboards(): Promise<typeof Dashboard[]> {
         
-        let dashboards: [] = [];
+        let dashboards: typeof Dashboard[] = [];
 
         try {
             await mongoose.connect("mongodb://localhost:4000/DashBuddy-State");
-
+            dashboards = await Dashboard.find({}, '-__v');
         }
         catch (e) {
             console.error(e);
@@ -28,9 +28,9 @@ export class DashboardDAL implements IDashboardDAL{
         return dashboards;
     };
     
-    public async CreateDashboard(_config: JSON): Promise<mongoose.Schema> {
+    public async CreateDashboard(_config: JSON): Promise<any> {
         
-        let dashboard = "";
+        let dashboard;
         
         try {
             await mongoose.connect("mongodb://localhost:4000/DashBuddy-State");
