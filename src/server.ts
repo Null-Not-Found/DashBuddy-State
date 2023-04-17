@@ -11,6 +11,17 @@ const DAL: IDashboardDAL = new DashboardDAL();
 APP.use(PARSER.json());
 APP.use(PARSER.urlencoded({ extended: true }));
 
+fetch('http://127.0.0.1:3001/register', {
+	method: 'POST',
+	headers: {
+		'Content-Type': 'application/json'
+	  },
+	body: JSON.stringify({
+		"microservice": "state",
+		"port": "3500"
+	}),
+})
+
 APP.post('/post', async (_req: Request, _res: Response) => {
 	const DASHBOARDID = await DAL.CreateDashboard();
 
@@ -65,7 +76,7 @@ APP.get('/get/:DId', (_req: Request<{ UId: Number }>, _res: Response) => {
 })
 
 APP.get('/ping', (_req: Request, _res: Response) => {
-
+	console.log("ping")
 	_res.status(200).json({
 		"status": "Pong!"
 	});
