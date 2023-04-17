@@ -1,35 +1,39 @@
 // Importing module
-import { Dashboard } from '@prisma/client';
 import express, { Application, Request, Response } from 'express';
-import { GetAllDashboards } from './DAL/DashboardDAL';
+import { IDashboardDAL } from './DAL interfaces/IDashBoardDAL';
+import { DashboardDAL } from './DAL/DashboardDAL';
 
-const bp = require('body-parser');
-const app: Application = express();
+const PARSER = require('body-parser');
+const APP: Application = express();
 const PORT: Number = 3500;
+const DAL: IDashboardDAL = new DashboardDAL();
 
-app.use(bp.json());
-app.use(bp.urlencoded({ extended: true }));
+APP.use(PARSER.json());
+APP.use(PARSER.urlencoded({ extended: true }));
 
-app.post('/', (_req: Request, _res: Response) => {
-	_res.status(200).json({
-		"Time": new Date().toUTCString()
-	});
-})
+APP.post('/post', async (_req: Request, _res: Response) => {
+	const DASHBOARDID = await DAL.CreateDashboard();
 
-app.get('/', async (_req: Request, _res: Response) => {
+	if (DASHBOARDID == null)
+	{
+		_res.status(400).json({
+			"Time": new Date().toUTCString(),
+			"Error": "Dashboard could not be created"
+		});
 
-	const DASHBOARDS: Dashboard[] = await GetAllDashboards(); 
+		return;
+	}
 
 	_res.status(200).json({
 		"Time": new Date().toUTCString(),
-		"data": DASHBOARDS
+		"Id": DASHBOARDID
 	});
 })
 
-app.get('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
+APP.put('/put/:DId', (_req: Request<{ UId: Number }>, _res: Response) => {
 
 	var responseObject: JSON = <JSON><unknown>{
-		"UId": _req.params.UId
+		"DId": _req.params.UId
 	};
 
 	_res.status(200).json({
@@ -38,20 +42,37 @@ app.get('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
 	});
 })
 
-app.put('/:UId', (_req: Request<{ UId: Number }>, _res: Response) => {
+APP.get('/get', async (_req: Request, _res: Response) => {
+
+	const DASHBOARDS = await DAL.GetAllDashboards(); 
+
+	_res.status(200).json({
+		"Time": new Date().toUTCString(),
+		"Dashboards": DASHBOARDS
+	});
+})
+
+APP.get('/get/:DId', (_req: Request<{ UId: Number }>, _res: Response) => {
 
 	var responseObject: JSON = <JSON><unknown>{
-		"UId": _req.params.UId
+		"DId": _req.params.UId
 	};
 
 	_res.status(200).json({
 		"Time": new Date().toUTCString(),
 		"data": responseObject
+	});
+})
+
+APP.get('/ping', (_req: Request, _res: Response) => {
+
+	_res.status(200).json({
+		"status": "Pong!"
 	});
 })
 
 // Server setup
-app.listen(PORT, () => {
+APP.listen(PORT, () => {
 	console.log('The application is listening '
 		+ 'on port http://localhost:' + PORT);
 })

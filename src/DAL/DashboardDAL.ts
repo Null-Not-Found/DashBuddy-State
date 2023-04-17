@@ -1,17 +1,44 @@
-import { PrismaClient, Dashboard } from '@prisma/client'
+import { IDashboardDAL } from '../DAL interfaces/IDashBoardDAL';
+import mongoose from 'mongoose';
+import Dashboard from '../models/Dashboard';
+import { IDashboard } from '../Model interfaces/IDashboard';
 
-const PRISMA = new PrismaClient();
+export class DashboardDAL implements IDashboardDAL{
 
-export async function GetAllDashboards() {
-    const DASHBOARDS: Dashboard[] = await PRISMA.dashboard.findMany();
-    console.log(DASHBOARDS);
-    return DASHBOARDS;
+    public async GetAllDashboards(): Promise<IDashboard[]> {
+        
+        let dashboards: IDashboard[] = [];
+
+        try {
+            await mongoose.connect("mongodb://localhost:4000/DashBuddy-State");
+            dashboards = await Dashboard.find({}, '-__v');
+        }
+        catch (e) {
+            console.error(e);
+        }
+        finally {
+            await mongoose.disconnect();
+        }
+
+        return dashboards;
+    };
+    
+    public async CreateDashboard(): Promise<mongoose.Types.ObjectId | null> {
+        let dashboardId: mongoose.Types.ObjectId | null = null;
+        
+        try {
+            await mongoose.connect("mongodb://localhost:4000/DashBuddy-State");
+            
+            let dashboard = await Dashboard.create({_id: new mongoose.Types.ObjectId()});
+            dashboardId = dashboard._id;
+
+        }
+        catch (e) {
+            console.error(e);
+        }
+        finally {
+            await mongoose.disconnect();
+            return dashboardId;
+        }
+    };
 }
-
-GetAllDashboards()
-    .catch(e => {
-        console.error(e)
-    })
-    .finally(async () => {
-        await PRISMA.$disconnect()
-    })
