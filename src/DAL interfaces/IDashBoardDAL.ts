@@ -5,4 +5,5 @@ export interface IDashboardDAL
 {
     GetAllDashboards(): Promise<IDashboard[]>;
     CreateDashboard(): Promise<mongoose.Types.ObjectId | null>;
+    UpdateDashboard(_dashId: String, _config: JSON): Promise<boolean>;
 }
