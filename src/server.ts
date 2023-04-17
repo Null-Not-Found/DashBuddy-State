@@ -26,19 +26,27 @@ APP.post('/post', async (_req: Request, _res: Response) => {
 
 	_res.status(200).json({
 		"Time": new Date().toUTCString(),
-		"Id": DASHBOARDID
+		"DId": DASHBOARDID
 	});
 })
 
-APP.put('/put/:DId', (_req: Request<{ UId: Number }>, _res: Response) => {
+APP.put('/put/:DId', async (_req: Request<{ DId: string }>, _res: Response) => {
 
-	var responseObject: JSON = <JSON><unknown>{
-		"DId": _req.params.UId
-	};
+	const UPDATERESULT = await DAL.UpdateDashboard(_req.params.DId, _req.body["config"]);
+
+	if (UPDATERESULT == false)
+	{
+		_res.status(400).json({
+			"Time": new Date().toUTCString(),
+			"Status": "Failed"
+		});
+
+		return;
+	}
 
 	_res.status(200).json({
 		"Time": new Date().toUTCString(),
-		"data": responseObject
+		"Status": "Succeeded"
 	});
 })
 
