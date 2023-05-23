@@ -4,7 +4,7 @@ import Dashboard from '../models/Dashboard';
 import { IDashboard } from '../Model interfaces/IDashboard';
 
 export class DashboardDAL implements IDashboardDAL{
-    private DBstring: string = "mongodb://localhost:4000/DashBuddy-State";
+    private DBstring: string = process.env.DATABASE_URL || "";
 
     public async GetAllDashboards(): Promise<IDashboard[]> {
         
