@@ -5,7 +5,7 @@ import { DashboardDAL } from './DAL/DashboardDAL';
 
 const PARSER = require('body-parser');
 const APP: Application = express();
-const PORT: Number = 3500;
+const PORT: Number = Number(process.env.PORT) || 3500;
 const DAL: IDashboardDAL = new DashboardDAL();
 
 APP.use(PARSER.json());
@@ -18,7 +18,7 @@ fetch('http://127.0.0.1:3001/register', {
 	  },
 	body: JSON.stringify({
 		"microservice": "state",
-		"port": "3500"
+		"port": PORT
 	}),
 })
 
