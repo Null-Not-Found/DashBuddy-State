@@ -2,6 +2,7 @@ import { IDashboardDAL } from '../DAL interfaces/IDashBoardDAL';
 import mongoose from 'mongoose';
 import Dashboard from '../models/Dashboard';
 import { IDashboard } from '../Model interfaces/IDashboard';
+import 'dotenv/config'
 
 export class DashboardDAL implements IDashboardDAL{
     private DBstring: string = process.env.DATABASE_URL || "";
