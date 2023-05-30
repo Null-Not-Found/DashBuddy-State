@@ -2,6 +2,7 @@
 import express, { Application, Request, Response } from 'express';
 import { IDashboardDAL } from './DAL interfaces/IDashBoardDAL';
 import { DashboardDAL } from './DAL/DashboardDAL';
+import 'dotenv/config'
 
 const PARSER = require('body-parser');
 const APP: Application = express();
