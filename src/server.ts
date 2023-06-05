@@ -5,18 +5,18 @@ import { DashboardDAL } from './DAL/DashboardDAL';
 import 'dotenv/config'
 
 const PARSER = require('body-parser');
-const APP: Application = express();
+export const APP: Application = express();
 const PORT: Number = Number(process.env.PORT) || 3500;
 const DAL: IDashboardDAL = new DashboardDAL();
 
 APP.use(PARSER.json());
 APP.use(PARSER.urlencoded({ extended: true }));
 
-fetch('http://127.0.0.1:3001/register', {
+fetch(process.env.DNS || "", {
 	method: 'POST',
 	headers: {
 		'Content-Type': 'application/json'
-	  },
+	},
 	body: JSON.stringify({
 		"microservice": "state",
 		"port": PORT
