@@ -87,7 +87,7 @@ APP.get('/get/:DId', (_req: Request<{ UId: Number }>, _res: Response) => {
 APP.get('/ping', (_req: Request, _res: Response) => {
 	console.log("ping")
 	_res.status(200).json({
-		"status": "Pong!"
+		"Status": "Pong!"
 	});
 })
 
