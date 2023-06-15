@@ -5,7 +5,7 @@ import { IDashboard } from '../Model interfaces/IDashboard';
 import 'dotenv/config'
 
 export class DashboardDAL implements IDashboardDAL{
-    private DBstring: string = process.env.DATABASE_URL || "";
+    private DBstring: string = process.env.DATABASE_URL || "mongodb://localhost:4000/DashBuddy-State";
 
     public async GetAllDashboards(): Promise<IDashboard[]> {
         
