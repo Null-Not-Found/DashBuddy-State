@@ -5,12 +5,16 @@ import { DashboardDAL } from './DAL/DashboardDAL';
 import 'dotenv/config'
 
 const PARSER = require('body-parser');
-export const APP: Application = express();
 const PORT: Number = Number(process.env.PORT) || 3500;
 const DAL: IDashboardDAL = new DashboardDAL();
 
+export const APP: Application = express();
+
 APP.use(PARSER.json());
 APP.use(PARSER.urlencoded({ extended: true }));
+
+var cors = require('cors');
+APP.use(cors());
 
 fetch(process.env.DNS || "", {
 	method: 'POST',
